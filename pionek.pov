@@ -16,7 +16,7 @@ global_settings{ assumed_gamma 1.0 }
 #include "transforms.inc"
 
 camera {perspective angle 75     
-        location  <0.0 , 1.0 ,-3.0>
+        location  <10.0 , 10.0 ,-10.0>
         right     x*image_width/image_height
         look_at   <0.0 , 1.0 , 0.0>}
 
@@ -38,15 +38,39 @@ plane{ <0,1,0>, 0
                 finish { phong 0.1}
               } 
      } 
-       
-object { //Round_Cylinder(point A, point B, Radius, EdgeRadius, UseMerge)
-         Round_Cylinder(<0,0,0>, <0,0.3,0>,0.50,0,0)  
-         texture{pigment{color rgb<1,0.2,0.35>}}
-       }
-object{//Round_Cone(point A, radius A, point B, radius B, rounding radius, merge on) 
-         Round_Cone(<0,0.3,0>,0.50,<0,0.50,0>,0.25,0,0)  
-         texture{pigment{color rgb<0.75,0.35,1>}}}  
 
-cylinder {<0,0.3,0>,<0,0.9,0>,0.40 texture { pigment { color rgb<1,1,1> }
-                   }
-         }
+#declare PawnBase =
+union {
+    intersection {
+       sphere { <0, 0, 0>, 2.5 }
+       plane { -y, 0 }
+    }
+    cylinder { 0, y*0.35, 2.5 }
+}
+
+#declare Pawn = union {
+   sphere { <0, 7, 0>, 1.5 }
+   
+   sphere { <0, 0, 0>, 1
+      scale <1.2, 0.3, 1.2>
+      translate 5.5*y
+   }
+
+   intersection {
+      plane { y, 5.5 }
+      object {
+         Hyperboloid_Y
+         translate 5*y
+         scale <0.5, 1, 0.5>
+      }
+      plane { -y, -2.5 }
+   }
+
+   sphere { <0, 0, 0>, 1
+      scale <2, 0.5, 2>
+      translate <0, 2.3, 0>
+   }
+   object { PawnBase }
+}
+
+object { Pawn }
